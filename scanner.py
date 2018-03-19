@@ -1,10 +1,39 @@
+"""
+Sample script to test ad-hoc scanning by table drive.
+This accepts time in 24hour format (xx:xx, x:xx, x.xx, xx.xx) 
+"""
 
 def getchar(words,pos):
-	""" returns char at pos of words, or None if out of bounds """
+	""" returns groupChars at pos of words, or None if out of bounds """
 
 	if pos<0 or pos>=len(words): return None
 
-	return words[pos]
+	
+
+	if words[pos] >= '0' and words[pos] <= '1':
+		return 'hour_0'
+
+	elif words[pos] == '2':
+		return 'hour_1'
+
+	elif words[pos] >= '0' and words[pos] <= '3':
+		return 'hour_2'
+
+	elif words[pos] >= '0' and words[pos] <= '5':
+		return 'sec_0'
+
+	elif words[pos] >= '0' and words[pos] <= '9':
+		return 'sec_1'
+
+
+	elif words[pos] == ':' or words[pos] == '.':
+		return 'time_sep'
+
+	else:
+		return 'OTHER'
+
+
+
 	
 
 def scan(text,transition_table,accept_states):
@@ -14,6 +43,7 @@ def scan(text,transition_table,accept_states):
 	"""
 	
 	# initial state
+	
 	pos = 0
 	state = 'q0'
 	
@@ -25,6 +55,7 @@ def scan(text,transition_table,accept_states):
 		
 			state = transition_table[state][c]	# set new state
 			pos += 1	# advance to next char
+
 			
 		else:	# no transition found
 
@@ -37,30 +68,31 @@ def scan(text,transition_table,accept_states):
 			
 	
 # the transition table, as a dictionary
-
-# Αντικαταστήστε με το δικό σας λεξικό μεταβάσεων...
-td = { 'q0':{ 't':'q1','l':'q2' },
-       'q1':{ 'e':'q3' },
-       'q2':{ 'o':'q8' },
-       'q3':{ 's':'q4','r':'q6' },
-       'q4':{ 't':'q5' },
-       'q6':{ 'm':'q7' },
-       'q8':{ 'n':'q9' },
-       'q9':{ 'g':'q10'}
+td = { 
+		'q0' : {'hour_0' : 'q1', 'hour_1' : 'q2', 'hour_2' : 'q3','OTHER':'q9'},
+		'q1' : {'time_sep' : 'q5','digit_0': 'q3', 'digit_1' : 'q3', 'digit_2' : 'q3' , 'sec_1' : 'q3','sec_2' : 'q3','OTHER':'q8'},
+		'q2' : {'time_sep' : 'q5', 'digit_0': 'q4', 'digit_1' : 'q4', 'digit_2' : 'q4','OTHER':'q8' },
+		'q3' : {'time_sep' : 'q5','OTHER':'q8'},
+		'q4' : {'time_sep' : 'q5','OTHER':'q8'},
+		'q5' : {'digit_0': 'q6', 'digit_1' : 'q6', 'digit_2' : 'q6', 'sec_1' : 'q6','OTHER':'q8'},
+		'q6' : {'digit_0': 'q7', 'digit_1' : 'q7', 'digit_2' : 'q7', 'sec_1' : 'q7', 'sec_2' : 'q7','OTHER':'q8',}
+        
      } 
+
 
 # the dictionary of accepting states and their
 # corresponding token
+ad = {'q8' : 'TIME_TOKEN',
+      'q9' : 'WRONG INPUT'
+}
 
-# Αντικαταστήστε με το δικό σας λεξικό καταστάσεων αποδοχής...
-ad = { 'q5':'TEST_TOKEN',
-       'q7':'TERM_TOKEN',
-       'q10':'LONG_TOKEN'
-     }
+
 
 
 # get a string from input
 text = input('give some input>')
+
+
 
 # scan text until no more input
 while text:	# that is, while len(text)>0
@@ -69,11 +101,11 @@ while text:	# that is, while len(text)>0
 	token,position = scan(text,td,ad)
 	
 	if token=='ERROR_TOKEN':
-		print('unrecognized input at pos',position+1,'of',text)
+		print('ERROR_TOKEN: unrecognized input at pos',position+1,'of',text)
 		break
 	
-	print("token:",token,"string:",text[:position])
+	print(token,text[:position])
 	
 	# remaining text for next scan
-	text = text[position:]
-	
+
+	text = text[position: ]
