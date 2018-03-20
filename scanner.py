@@ -14,22 +14,20 @@ def getchar(words,pos):
 		return 'time_0'
 
 	elif words[pos] == '2':
-		return 'time_1'
+		return 'digit_1'
 
-	elif words[pos] >= '3' and words[pos] <= '9':
-		return 'time_2'
-	
 	elif words[pos] >= '0' and words[pos] <= '3':
-		return 'time_3'
-	
+		return 'digit_2'
+
 	elif words[pos] >= '0' and words[pos] <= '5':
-		return 'time_4'
+		return 'min_1'
 
 	elif words[pos] >= '0' and words[pos] <= '9':
-		return 'time_5'
+		return 'min_2'
+
 
 	elif words[pos] == ':' or words[pos] == '.':
-		return 'time_sep'
+		return 'time_interval'
 
 	else:
 		return 'OTHER'
@@ -71,21 +69,21 @@ def scan(text,transition_table,accept_states):
 	
 # the transition table, as a dictionary
 td = { 
-		'q0' : {'time_0' : 'q1', 'time_1' : 'q2', 'time_2' : 'q3', 'OTHER':'q9'},
-		'q1' : {'time_sep' : 'q6','time_5': 'q4', 'OTHER':'q9'},
-		'q2' : {'time_sep' : 'q6', 'time_3': 'q5', 'OTHER':'q9' },
-		'q3' : {'time_sep' : 'q6','OTHER':'q9'},
-		'q4' : {'time_sep' : 'q6', 'OTHER':'q9'},
-		'q5' : {'time_sep' : 'q6', 'OTHER':'q9'},
-		'q6' : {'time_4': 'q7', 'OTHER':'q9'},
-	        'q7' : {'time_5': 'q8', 'OTHER':'q9'}
+		'q0' : {'time_0' : 'q1', 'time_1' : 'q2', 'time_2' : 'q3', 'time_3' : 'q3', 'time_4' : 'q3','OTHER':'q8'},
+		'q1' : {'time_sep' : 'q5','time_0': 'q3', 'time_1' : 'q3', 'time_2' : 'q3' , 'time_3' : 'q3','time_4' : 'q3','OTHER':'q8'},
+		'q2' : {'time_sep' : 'q5', 'time_0': 'q4', 'time_1' : 'q4', 'time_2' : 'q4','OTHER':'q8' },
+		'q3' : {'time_sep' : 'q5','OTHER':'q8'},
+		'q4' : {'time_sep' : 'q5','OTHER':'q8'},
+		'q5' : {'time_0': 'q6', 'time_1' : 'q6', 'time_2' : 'q6', 'time_3' : 'q6','OTHER':'q8'},
+		'q6' : {'time_0': 'q7', 'time_1' : 'q7', 'time_2' : 'q7', 'time_3' : 'q7', 'time_4' : 'q7','OTHER':'q8',}
+        
      } 
 
 
 # the dictionary of accepting states and their
 # corresponding token
-ad = {'q8' : 'TIME_TOKEN',
-      'q9' : 'WRONG INPUT'
+ad = {'q7' : 'TIME_TOKEN',
+      'q8' : 'WRONG INPUT'
 }
 
 
