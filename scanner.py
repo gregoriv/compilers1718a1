@@ -14,20 +14,20 @@ def getchar(words,pos):
 		return 'time_0'
 
 	elif words[pos] == '2':
-		return 'digit_1'
+		return 'time_1'
 
 	elif words[pos] >= '0' and words[pos] <= '3':
-		return 'digit_2'
+		return 'time_2'
 
 	elif words[pos] >= '0' and words[pos] <= '5':
-		return 'min_1'
+		return 'time_3'
 
 	elif words[pos] >= '0' and words[pos] <= '9':
-		return 'min_2'
+		return 'time_4'
 
 
 	elif words[pos] == ':' or words[pos] == '.':
-		return 'time_interval'
+		return 'time_sep'
 
 	else:
 		return 'OTHER'
