@@ -5,7 +5,6 @@ def getchar(words,pos):
 
 	return words[pos]
 	
-
 def scan(text,transition_table,accept_states):
 	""" Scans `text` while transitions exist in 'transition_table'.
 	After that, if in a state belonging to `accept_states`,
@@ -34,10 +33,8 @@ def scan(text,transition_table,accept_states):
 			# current state is not accepting
 			return 'ERROR_TOKEN',pos #returns ERROR_TOKEN and position when time is wrong
 			
-	
 # the transition table, as a dictionary
 # new transition table:
-
 td = { 'q0':{ '0':'q1','1':'q1','2':'q3','3':'q5','4':'q5','5':'q5','6':'q5','7':'q5','8':'q5','9':'q5'},
        'q1':{ ':':'q6','.':'q6','0':'q2','1':'q2','2':'q2','3':'q2','4':'q2','5':'q2','6':'q2','7':'q2','8':'q2','9':'q2' },
        'q2':{ ':':'q6','.':'q6' },
@@ -50,10 +47,8 @@ td = { 'q0':{ '0':'q1','1':'q1','2':'q3','3':'q5','4':'q5','5':'q5','6':'q5','7'
 
 # the dictionary of accepting states and their
 # corresponding token
-
 #new dictionary of accepting states:
 ad = { 'q8':'TIME_TOKEN' } #returns TIME_TOKEN when time is correct
-
 
 # get a string from input
 text = input('give time>')
