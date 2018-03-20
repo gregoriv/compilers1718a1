@@ -1,39 +1,9 @@
-"""
-Sample script to test ad-hoc scanning by table drive.
-This accepts time in 24hour format (xx:xx, x:xx, x.xx, xx.xx) 
-"""
-
 def getchar(words,pos):
-	""" returns groupChars at pos of words, or None if out of bounds """
+	""" returns char at pos of words, or None if out of bounds """
 
 	if pos<0 or pos>=len(words): return None
 
-	
-
-	if words[pos] >= '0' and words[pos] <= '1':
-		return 'time_0'
-
-	elif words[pos] == '2':
-		return 'time_1'
-
-	elif words[pos] >= '0' and words[pos] <= '3':
-		return 'time_2'
-
-	elif words[pos] >= '0' and words[pos] <= '5':
-		return 'time_3'
-
-	elif words[pos] >= '0' and words[pos] <= '9':
-		return 'time_4'
-
-
-	elif words[pos] == ':' or words[pos] == '.':
-		return 'time_sep'
-
-	else:
-		return 'OTHER'
-
-
-
+	return words[pos]
 	
 
 def scan(text,transition_table,accept_states):
@@ -43,7 +13,6 @@ def scan(text,transition_table,accept_states):
 	"""
 	
 	# initial state
-	
 	pos = 0
 	state = 'q0'
 	
@@ -55,7 +24,6 @@ def scan(text,transition_table,accept_states):
 		
 			state = transition_table[state][c]	# set new state
 			pos += 1	# advance to next char
-
 			
 		else:	# no transition found
 
@@ -64,35 +32,31 @@ def scan(text,transition_table,accept_states):
 				return accept_states[state],pos
 
 			# current state is not accepting
-			return 'ERROR_TOKEN',pos
+			return 'ERROR_TOKEN',pos #returns ERROR_TOKEN and position when time is wrong
 			
 	
 # the transition table, as a dictionary
-td = { 
-		'q0' : {'time_0' : 'q1', 'time_1' : 'q2', 'time_2' : 'q3', 'time_3' : 'q3', 'time_4' : 'q3','OTHER':'q8'},
-		'q1' : {'time_sep' : 'q5','time_0': 'q3', 'time_1' : 'q3', 'time_2' : 'q3' , 'time_3' : 'q3','time_4' : 'q3','OTHER':'q8'},
-		'q2' : {'time_sep' : 'q5', 'time_0': 'q4', 'time_1' : 'q4', 'time_2' : 'q4','OTHER':'q8' },
-		'q3' : {'time_sep' : 'q5','OTHER':'q8'},
-		'q4' : {'time_sep' : 'q5','OTHER':'q8'},
-		'q5' : {'time_0': 'q6', 'time_1' : 'q6', 'time_2' : 'q6', 'time_3' : 'q6','OTHER':'q8'},
-		'q6' : {'time_0': 'q7', 'time_1' : 'q7', 'time_2' : 'q7', 'time_3' : 'q7', 'time_4' : 'q7','OTHER':'q8',}
-        
-     } 
+# new transition table:
 
+td = { 'q0':{ '0':'q1','1':'q1','2':'q3','3':'q5','4':'q5','5':'q5','6':'q5','7':'q5','8':'q5','9':'q5'},
+       'q1':{ ':':'q6','.':'q6','0':'q2','1':'q2','2':'q2','3':'q2','4':'q2','5':'q2','6':'q2','7':'q2','8':'q2','9':'q2' },
+       'q2':{ ':':'q6','.':'q6' },
+       'q3':{ ':':'q6','.':'q6','0':'q4','1':'q4','2':'q4','3':'q4' },  
+       'q4':{ ':':'q6','.':'q6' },
+       'q5':{ ':':'q6','.':'q6' },
+       'q6':{ '0':'q7','1':'q7','2':'q7','3':'q7','4':'q7','5':'q7' },
+       'q7':{ '0':'q8','1':'q8','2':'q8','3':'q8','4':'q8','5':'q8','6':'q8','7':'q8','8':'q8','9':'q8' }	
+     } 
 
 # the dictionary of accepting states and their
 # corresponding token
-ad = {'q7' : 'TIME_TOKEN',
-      'q8' : 'WRONG INPUT'
-}
 
-
+#new dictionary of accepting states:
+ad = { 'q8':'TIME_TOKEN' } #returns TIME_TOKEN when time is correct
 
 
 # get a string from input
-text = input('give some input>')
-
-
+text = input('give time>')
 
 # scan text until no more input
 while text:	# that is, while len(text)>0
@@ -100,12 +64,11 @@ while text:	# that is, while len(text)>0
 	# get next token and position after last char recognized
 	token,position = scan(text,td,ad)
 	
-	if token=='ERROR_TOKEN':
-		print('ERROR_TOKEN: unrecognized input at pos',position+1,'of',text)
+	if token=='ERROR_TOKEN': #if there is an ERROR_TOKEN print
+		print('unrecognized input at pos',position+1,'of',text)
 		break
 	
-	print(token,text[:position])
+	print("token:",token,"string:",text[:position])
 	
 	# remaining text for next scan
-
-	text = text[position: ]
+	text = text[position:]
