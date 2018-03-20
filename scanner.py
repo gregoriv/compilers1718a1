@@ -11,20 +11,22 @@ def getchar(words,pos):
 	
 
 	if words[pos] >= '0' and words[pos] <= '1':
-		return 'hour_0'
+		return 'time_0'
 
 	elif words[pos] == '2':
-		return 'hour_1'
+		return 'time_1'
 
+	elif words[pos] >= '3' and words[pos] <= '9':
+		return 'time_2'
+	
 	elif words[pos] >= '0' and words[pos] <= '3':
-		return 'hour_2'
-
+		return 'time_3'
+	
 	elif words[pos] >= '0' and words[pos] <= '5':
-		return 'sec_0'
+		return 'time_4'
 
 	elif words[pos] >= '0' and words[pos] <= '9':
-		return 'sec_1'
-
+		return 'time_5'
 
 	elif words[pos] == ':' or words[pos] == '.':
 		return 'time_sep'
@@ -69,14 +71,14 @@ def scan(text,transition_table,accept_states):
 	
 # the transition table, as a dictionary
 td = { 
-		'q0' : {'hour_0' : 'q1', 'hour_1' : 'q2', 'hour_2' : 'q3','OTHER':'q9'},
-		'q1' : {'time_sep' : 'q5','digit_0': 'q3', 'digit_1' : 'q3', 'digit_2' : 'q3' , 'sec_1' : 'q3','sec_2' : 'q3','OTHER':'q8'},
-		'q2' : {'time_sep' : 'q5', 'digit_0': 'q4', 'digit_1' : 'q4', 'digit_2' : 'q4','OTHER':'q8' },
-		'q3' : {'time_sep' : 'q5','OTHER':'q8'},
-		'q4' : {'time_sep' : 'q5','OTHER':'q8'},
-		'q5' : {'digit_0': 'q6', 'digit_1' : 'q6', 'digit_2' : 'q6', 'sec_1' : 'q6','OTHER':'q8'},
-		'q6' : {'digit_0': 'q7', 'digit_1' : 'q7', 'digit_2' : 'q7', 'sec_1' : 'q7', 'sec_2' : 'q7','OTHER':'q8',}
-        
+		'q0' : {'time_0' : 'q1', 'time_1' : 'q2', 'time_2' : 'q3', 'OTHER':'q9'},
+		'q1' : {'time_sep' : 'q6','time_5': 'q4', 'OTHER':'q9'},
+		'q2' : {'time_sep' : 'q6', 'time_3': 'q5', 'OTHER':'q9' },
+		'q3' : {'time_sep' : 'q6','OTHER':'q9'},
+		'q4' : {'time_sep' : 'q6', 'OTHER':'q9'},
+		'q5' : {'time_sep' : 'q6', 'OTHER':'q9'},
+		'q6' : {'time_4': 'q7', 'OTHER':'q9'},
+	        'q7' : {'time_5': 'q8', 'OTHER':'q9'}
      } 
 
 
