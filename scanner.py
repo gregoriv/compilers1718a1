@@ -1,3 +1,7 @@
+"""
+Sample script to test ad-hoc scanning by table drive.
+This accepts time in 24hour format (xx:xx, x:xx, x.xx, xx.xx) 
+"""
 def getchar(words,pos):
 	""" returns char at pos of words, or None if out of bounds """
 
